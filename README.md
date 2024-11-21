@@ -63,6 +63,7 @@
 - Clean Architecture
 - Twelve factor app - [Link](https://12factor.net)
 - Repository pattern [Link](https://www.toptal.com/go/go-repository-tutorial)
+- Software development principles (DRY, YAGNI, KISS, etc.)
 
 ### Uncertainties
 - SAGA pattern
