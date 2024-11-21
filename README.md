@@ -15,6 +15,19 @@
 - `docs`: Contains the swagger docs
 - `scripts`: Contains the scripts to run the application
 
+### Commands to keep note of
+- `go get -u github.com/go-chi/chi/v5` - To get the chi library for this project
+- `go install xyz` - To install the package in the bin folder
+- `migrate create -seq -ext sql -dir ./cmd/migrate/migrations create_posts` - To create a new migration file
+- `migrate -path=./cmd/migrate/migrations -database="postgres://admin:adminpassword@localhost/social?sslmode=disable" up` - To run the migrations
+
+### Steps to run the application
+- `docker-compose up` - To start the postgres database
+- `./bin/air` - To start the server
+- `make migrate-up` - To run the migrations
+- `make migrate-down <int?>` - To rollback the migrations
+- `make migrate-create <string>` - To create a new migration file
+
 ### 3 layers
 - Transport layer: This is the layer that handles the incoming requests and outgoing responses. It's responsible for parsing the incoming requests, validating them, and serializing the outgoing responses.
 - Service layer: This is the layer that contains the business logic of your application. It's responsible for processing the incoming requests, interacting with the storage layer, and returning the results.
@@ -35,12 +48,6 @@
   - Handler serializes the data and sends it back to the user
   - User receives the data
 
-### Uncertainties
-- SAGA pattern
-- What is middlewares used for?
-- Repository Pattern
-  - The repository pattern is a design pattern that abstracts the data access logic from the rest of the application. It provides a way to access the data without exposing the underlying database implementation.
-
 ### 3rd party libraries
 - golang chi
 - Hot reload: air
@@ -57,6 +64,12 @@
 - Twelve factor app - [Link](https://12factor.net)
 - Repository pattern [Link](https://www.toptal.com/go/go-repository-tutorial)
 
+### Uncertainties
+- SAGA pattern
+- What is middlewares used for?
+- Repository Pattern
+  - The repository pattern is a design pattern that abstracts the data access logic from the rest of the application. It provides a way to access the data without exposing the underlying database implementation.
+
 ### Principles to understand
 - Separation of concerns:
   - Each level in your program should be separate by a clear barrier, the transport layer, the service layer, the storage layer...
@@ -68,17 +81,3 @@
   - Your system should be easy to change, if you have to change a lot of existing code to add a new feature you're doing it wrong.
 - Focus on business value
   - And finally, focus on delivering value to your users.
-
-### Commands to keep note of
-- `go get -u github.com/go-chi/chi/v5` - To get the chi library for this project
-- `go install xyz` - To install the package in the bin folder
-- `migrate create -seq -ext sql -dir ./cmd/migrate/migrations create_posts` - To create a new migration file
-- `migrate -path=./cmd/migrate/migrations -database="postgres://admin:adminpassword@localhost/social?sslmode=disable" up` - To run the migrations
-
-
-### Steps to run the application
-- `docker-compose up` - To start the postgres database
-- `./bin/air` - To start the server
-- `make migrate-up` - To run the migrations
-- `make migrate-down <int?>` - To rollback the migrations
-- `make migrate-create <string>` - To create a new migration file
