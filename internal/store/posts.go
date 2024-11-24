@@ -4,6 +4,7 @@ import (
 	"SocialMedia/internal/models"
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/lib/pq"
 )
@@ -36,4 +37,39 @@ func (s *PostStore) Create(ctx context.Context, post *models.Post) error {
 	}
 
 	return nil
+}
+
+func (s *PostStore) GetByID(ctx context.Context, postID int64) (*models.Post, error) {
+	query := `
+		SELECT id, title, user_id, content, tags, created_at, updated_at
+		FROM posts
+		WHERE id = $1
+	`
+
+	var post models.Post
+
+	err := s.db.QueryRowContext(
+		ctx,
+		query,
+		postID,
+	).Scan(
+		&post.ID,
+		&post.Title,
+		&post.UserID,
+		&post.Content,
+		pq.Array(&post.Tags),
+		&post.CreatedAt,
+		&post.UpdatedAt,
+	)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &post, nil
 }
