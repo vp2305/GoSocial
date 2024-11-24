@@ -52,6 +52,7 @@
 - golang chi
 - Hot reload: air
 - golang migrate: To handle the migrations
+- go-playground/validator: To validate the incoming requests
 
 ### Not included 3rd party libraries but worth mentioning
 - GORM - Simplify the database interactions
