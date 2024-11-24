@@ -73,3 +73,57 @@ func (s *PostStore) GetByID(ctx context.Context, postID int64) (*models.Post, er
 
 	return &post, nil
 }
+
+func (s *PostStore) DeleteByID(ctx context.Context, postID int64) error {
+	query := `
+		DELETE FROM posts 
+		WHERE id = $1 
+	`
+	res, err := s.db.ExecContext(
+		ctx,
+		query,
+		postID,
+	)
+
+	if err != nil {
+		return err
+	}
+	rows, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return ErrNotFound
+	}
+
+	return nil
+}
+
+func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error {
+	query := `
+		UPDATE posts
+		SET title = $2, content = $3, tags = $4, updated_at = NOW()
+		WHERE id = $1
+		RETURNING created_at, updated_at
+	`
+
+	err := s.db.QueryRowContext(
+		ctx,
+		query,
+		post.ID,
+		post.Title,
+		post.Content,
+		pq.Array(post.Tags),
+	).Scan(
+		&post.CreatedAt,
+		&post.UpdatedAt,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
