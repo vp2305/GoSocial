@@ -6,11 +6,11 @@ import (
 	"database/sql"
 )
 
-type UsersStore struct {
+type UserStore struct {
 	db *sql.DB
 }
 
-func (s *UsersStore) Create(ctx context.Context, user *models.User) error {
+func (s *UserStore) Create(ctx context.Context, user *models.User) error {
 	query := `
 		INSERT INTO users (username, password, email)
 		VALUES ($1, $2, $3) 

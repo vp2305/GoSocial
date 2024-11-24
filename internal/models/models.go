@@ -1,13 +1,14 @@
 package models
 
 type Post struct {
-	ID        int64    `json:"id"`
-	Content   string   `json:"content"`
-	Title     string   `json:"title"`
-	UserID    int64    `json:"user_id"`
-	Tags      []string `json:"tags"`
-	CreatedAt string   `json:"created_at"`
-	UpdatedAt string   `json:"updated_at"`
+	ID        int64     `json:"id"`
+	Content   string    `json:"content"`
+	Title     string    `json:"title"`
+	UserID    int64     `json:"user_id"`
+	Tags      []string  `json:"tags"`
+	CreatedAt string    `json:"created_at"`
+	UpdatedAt string    `json:"updated_at"`
+	Comments  []Comment `json:"comments"`
 }
 
 // Not returning the password in the json responses
@@ -17,4 +18,13 @@ type User struct {
 	Email     string `json:"email"`
 	Password  string `json:"-"`
 	CreatedAt string `json:"created_at"`
+}
+
+type Comment struct {
+	ID        int64  `json:"id"`
+	PostID    int64  `json:"post_id"`
+	UserID    int64  `json:"user_id"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"created_at"`
+	User      User   `json:"user"`
 }
