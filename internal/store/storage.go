@@ -28,6 +28,7 @@ type Storage struct {
 	}
 	Users interface {
 		Create(context.Context, *models.User) error
+		GetByID(ctx context.Context, userID int64) (*models.User, error)
 	}
 }
 
