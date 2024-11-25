@@ -41,7 +41,7 @@ func (s *PostStore) Create(ctx context.Context, post *models.Post) error {
 
 func (s *PostStore) GetByID(ctx context.Context, postID int64) (*models.Post, error) {
 	query := `
-		SELECT id, title, user_id, content, tags, created_at, updated_at
+		SELECT id, title, user_id, content, tags, created_at, updated_at, version
 		FROM posts
 		WHERE id = $1
 	`
@@ -60,6 +60,7 @@ func (s *PostStore) GetByID(ctx context.Context, postID int64) (*models.Post, er
 		pq.Array(&post.Tags),
 		&post.CreatedAt,
 		&post.UpdatedAt,
+		&post.Version,
 	)
 
 	if err != nil {
@@ -104,9 +105,9 @@ func (s *PostStore) DeleteByID(ctx context.Context, postID int64) error {
 func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error {
 	query := `
 		UPDATE posts
-		SET title = $2, content = $3, tags = $4, updated_at = NOW()
-		WHERE id = $1
-		RETURNING created_at, updated_at
+		SET title = $2, content = $3, tags = $4, updated_at = NOW(), version = version + 1
+		WHERE id = $1 AND version = $5
+		RETURNING created_at, updated_at, version
 	`
 
 	err := s.db.QueryRowContext(
@@ -116,13 +117,20 @@ func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error 
 		post.Title,
 		post.Content,
 		pq.Array(post.Tags),
+		post.Version,
 	).Scan(
 		&post.CreatedAt,
 		&post.UpdatedAt,
+		&post.Version,
 	)
 
 	if err != nil {
-		return err
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrNotFound
+		default:
+			return err
+		}
 	}
 
 	return nil

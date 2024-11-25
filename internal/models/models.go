@@ -7,6 +7,7 @@ type Post struct {
 	Content   string    `json:"content"`
 	CreatedAt string    `json:"created_at"`
 	UpdatedAt string    `json:"updated_at"`
+	Version   int       `json:"version"`
 	Tags      []string  `json:"tags"`
 	Comments  []Comment `json:"comments"`
 }
