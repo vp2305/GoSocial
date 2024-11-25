@@ -23,6 +23,7 @@ type Storage struct {
 		PatchPostById(context.Context, *models.Post) error
 	}
 	Comments interface {
+		Create(context.Context, *models.Comment) error
 		GetByPostID(context.Context, int64) (*[]models.Comment, error)
 	}
 	Users interface {
