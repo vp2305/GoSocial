@@ -127,7 +127,7 @@ func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error 
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return ErrNotFound
+			return ErrConflict
 		default:
 			return err
 		}
