@@ -71,6 +71,7 @@
 - What is middlewares used for?
 - Repository Pattern
   - The repository pattern is a design pattern that abstracts the data access logic from the rest of the application. It provides a way to access the data without exposing the underlying database implementation.
+  - Soft Delete vs Hard Delete?
 
 ### Principles to understand
 - Separation of concerns:
