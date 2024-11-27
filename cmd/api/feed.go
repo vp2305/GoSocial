@@ -5,6 +5,22 @@ import (
 	"net/http"
 )
 
+// GetUserFeed godoc
+//
+//	@Summary		Get user feed
+//	@Description	Get user feed respective to the pagination, filters and sort
+//	@Tags			feed
+//	@Accept			json
+//	@Produce		json
+//	@Param			limit	path		int		false	"Limit post per request"
+//	@Param			offset	path		int		false	"Offset by the previous post"
+//	@Param			sort	path		int		false	"Sort post by asc or desc"
+//	@Param			search	path		string	false	"Search by title or content"
+//	@Param			tags	path		string	false	"Filter by relative tags"
+//	@Success		200		{object}	[]models.PostWithMetadata
+//	@Failure		404		{object}	error	"Post not found"
+//	@Security		ApiKeyAuth
+//	@Router			/users/feed [get]
 func (app *application) getUserFeedHandler(w http.ResponseWriter, r *http.Request) {
 	// pagination, filters and sort
 	fq := store.PaginatedFeedQuery{

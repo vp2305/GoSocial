@@ -15,6 +15,18 @@ type userKey string
 
 const userCtx userKey = "users"
 
+// Getuser godoc
+//
+//	@Summary		Fetches a user profile
+//	@Description	Fetches a user profile by ID
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"User ID"
+//	@Success		200	{object}	models.User
+//	@Failure		404	{object}	error	"Invalid request"
+//	@Security		ApiKeyAuth
+//	@Router			/users/{id} [get]
 func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromCtx(r)
 
@@ -28,6 +40,21 @@ type FollowUser struct {
 	UserID int64 `json:"user_id"`
 }
 
+// FollowUser godoc
+//
+//	@Summary		Follow a user
+//	@Description	Follow a user by providing the target user's ID in the path and the current user's ID in the request body.
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			userID	path		int				true	"Target User ID"
+//	@Param			body	body		map[string]int	true	"Request body with current user ID in JSON format"
+//	@Success		204		{string}	string			"User followed successfully"
+//	@Failure		409		{object}	error			"Already following the user"
+//	@Failure		404		{object}	error			"Target user not found"
+//	@Failure		400		{object}	error			"Invalid request"
+//	@Security		ApiKeyAuth
+//	@Router			/users/{userID}/follow [put]
 func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request) {
 	followerUser := getUserFromCtx(r)
 
@@ -56,6 +83,20 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// UnfollowUser godoc
+//
+//	@Summary		Unfollow a user
+//	@Description	Unfollow a user by providing the target user's ID in the path and the current user's ID in the request body.
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			userID	path		int				true	"Target User ID"
+//	@Param			body	body		map[string]int	true	"Request body with current user ID in JSON format"
+//	@Success		204		{string}	string			"User unfollowed successfully"
+//	@Failure		404		{object}	error			"Target user not found"
+//	@Failure		400		{object}	error			"Invalid request"
+//	@Security		ApiKeyAuth
+//	@Router			/users/{userID}/unfollow [put]
 func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Request) {
 	unfollowedUser := getUserFromCtx(r)
 

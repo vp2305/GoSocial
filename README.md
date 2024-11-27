@@ -23,7 +23,7 @@
 
 ### Steps to run the application
 - `docker-compose up` - To start the postgres database
-- `./bin/air` - To start the server
+- `make run` - To start the server
 - `make migrate-up` - To run the migrations
 - `make migrate-down <int?>` - To rollback the migrations
 - `make migrate-create <string>` - To create a new migration file
@@ -53,6 +53,9 @@
 - Hot reload: air
 - golang migrate: To handle the migrations
 - go-playground/validator: To validate the incoming requests
+- go-swagger: To generate the swagger docs
+  - `go install github.com/swaggo/swag/cmd/swag@latest`
+  - `go get -u github.com/swaggo/http-swagger`
 
 ### Not included 3rd party libraries but worth mentioning
 - GORM - Simplify the database interactions

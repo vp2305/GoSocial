@@ -27,6 +27,18 @@ type UpdatePostPayload struct {
 	Tags    *[]string `json:"tags" validate:"omitempty"`
 }
 
+// CreatePosts godoc
+//
+//	@Summary		Create a post
+//	@Description	Create a post by providing necessary information.
+//	@Tags			posts
+//	@Accept			json
+//	@Produce		json
+//	@Param			body	body		CreatePostPayload	true	"Request body with post details"
+//	@Success		201		{object}	models.Post			"Created post information"
+//	@Failure		400		{object}	error				"Invalid request"
+//	@Security		ApiKeyAuth
+//	@Router			/posts [post]
 func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request) {
 	var payload CreatePostPayload
 	if err := readJSON(w, r, &payload); err != nil {
@@ -60,6 +72,18 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// GetPosts godoc
+//
+//	@Summary		Get a post by id
+//	@Description	Get post details and respective comments by id.
+//	@Tags			posts
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"Post ID"
+//	@Success		200	{object}	models.Post
+//	@Failure		404	{object}	error	"Post not found"
+//	@Security		ApiKeyAuth
+//	@Router			/posts/{id} [get]
 func (app *application) getPostHandler(w http.ResponseWriter, r *http.Request) {
 	post := getPostFromCtx(r)
 
@@ -77,6 +101,18 @@ func (app *application) getPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// DeletePost godoc
+//
+//	@Summary		Delete a post
+//	@Description	Delete a post by id.
+//	@Tags			posts
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int		true	"Post ID"
+//	@Success		204	{string}	string	"Post deleted successfully"
+//	@Failure		404	{object}	error	"Post not found"
+//	@Security		ApiKeyAuth
+//	@Router			/posts/{id} [delete]
 func (app *application) deletePostHandler(w http.ResponseWriter, r *http.Request) {
 	post := getPostFromCtx(r)
 
@@ -93,6 +129,21 @@ func (app *application) deletePostHandler(w http.ResponseWriter, r *http.Request
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// UpdatePost godoc
+//
+//	@Summary		Update a post
+//	@Description	Update post details by id.
+//	@Tags			posts
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		int					true	"Post ID"
+//	@Param			body	body		UpdatePostPayload	true	"Request body with post details"
+//	@Success		202		{object}	models.Post			"Updated post information"
+//	@Failure		404		{object}	error				"Post not found"
+//	@Failure		400		{object}	error				"Invalid request"
+//	@Failure		409		{object}	error				"Conflict occurred while updating"
+//	@Security		ApiKeyAuth
+//	@Router			/posts/{id} [patch]
 func (app *application) patchPostHandler(w http.ResponseWriter, r *http.Request) {
 	post := getPostFromCtx(r)
 
