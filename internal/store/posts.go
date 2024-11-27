@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/lib/pq"
 )
@@ -149,6 +150,8 @@ func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error 
 }
 
 func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedFeedQuery) (*[]models.PostWithMetadata, error) {
+	isTagFilterActive := len(fq.Tags) > 0
+
 	query := `
 		SELECT 
 			p.id, p.user_id, u.username, p.title, p.content, p.tags, COUNT(c.id) AS comments_count, p.created_at, p.version
@@ -156,11 +159,35 @@ func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedF
 		LEFT JOIN comments c on c.post_id = p.id
 		LEFT JOIN users u on p.user_id = u.id
 		JOIN followers f on f.follower_id = p.user_id OR p.user_id = $1
-		WHERE f.user_id = $1 OR p.user_id = $1
+		WHERE (f.user_id = $1 OR p.user_id = $1) 
+	  	AND (p.title ILIKE $4 OR p.content ILIKE $4)
+	`
+
+	// Conditionally add the tags filtering logic
+	if isTagFilterActive {
+		query += `
+			AND (p.tags @> $5)
+		`
+	}
+
+	// Add ordering, limit, and offset
+	query += `
 		GROUP BY p.id, u.username
 		ORDER BY p.created_at ` + fq.Sort + `
 		LIMIT $2 OFFSET $3
 	`
+
+	// Prepare the arguments for the query
+	args := []interface{}{
+		userID,
+		fq.Limit,
+		fq.Offset,
+		fmt.Sprintf("%%%s%%", fq.Search),
+	}
+
+	if isTagFilterActive {
+		args = append(args, pq.Array(fq.Tags))
+	}
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
@@ -168,9 +195,7 @@ func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedF
 	rows, err := s.db.QueryContext(
 		ctx,
 		query,
-		userID,
-		fq.Limit,
-		fq.Offset,
+		args...,
 	)
 
 	if err != nil {
