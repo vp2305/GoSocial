@@ -21,6 +21,7 @@ type Storage struct {
 		GetByID(context.Context, int64) (*models.Post, error)
 		DeleteByID(context.Context, int64) error
 		PatchPostById(context.Context, *models.Post) error
+		GetUserFeed(context.Context, int64, PaginatedFeedQuery) (*[]models.PostWithMetadata, error)
 	}
 	Comments interface {
 		Create(context.Context, *models.Comment) error

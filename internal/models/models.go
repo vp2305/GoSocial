@@ -10,6 +10,12 @@ type Post struct {
 	Version   int       `json:"version"`
 	Tags      []string  `json:"tags"`
 	Comments  []Comment `json:"comments"`
+	User      User      `json:"user"`
+}
+
+type PostWithMetadata struct {
+	Post
+	CommentCount int `json:"comments_count"`
 }
 
 // Not returning the password in the json responses

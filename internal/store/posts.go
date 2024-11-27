@@ -147,3 +147,59 @@ func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error 
 
 	return nil
 }
+
+func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedFeedQuery) (*[]models.PostWithMetadata, error) {
+	query := `
+		SELECT 
+			p.id, p.user_id, u.username, p.title, p.content, p.tags, COUNT(c.id) AS comments_count, p.created_at, p.version
+		FROM posts p
+		LEFT JOIN comments c on c.post_id = p.id
+		LEFT JOIN users u on p.user_id = u.id
+		JOIN followers f on f.follower_id = p.user_id OR p.user_id = $1
+		WHERE f.user_id = $1 OR p.user_id = $1
+		GROUP BY p.id, u.username
+		ORDER BY p.created_at ` + fq.Sort + `
+		LIMIT $2 OFFSET $3
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	rows, err := s.db.QueryContext(
+		ctx,
+		query,
+		userID,
+		fq.Limit,
+		fq.Offset,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var feed []models.PostWithMetadata
+	for rows.Next() {
+		var p models.PostWithMetadata
+
+		err := rows.Scan(
+			&p.ID,
+			&p.UserID,
+			&p.User.Username,
+			&p.Title,
+			&p.Content,
+			pq.Array(&p.Tags),
+			&p.CommentCount,
+			&p.CreatedAt,
+			&p.Version,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		feed = append(feed, p)
+	}
+
+	return &feed, nil
+}
