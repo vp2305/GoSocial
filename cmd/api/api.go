@@ -102,6 +102,7 @@ func (app *application) run(mux http.Handler) error {
 	}
 
 	app.logger.Infow("server has started", "addr", app.config.addr, "env", app.config.env)
+	app.logger.Infow("swagger initiated", "url", docs.SwaggerInfo.Host+"/v1/swagger/")
 
 	return srv.ListenAndServe()
 }
