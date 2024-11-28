@@ -28,7 +28,7 @@ func (s *FollowerStore) Follow(ctx context.Context, followerID int64, userID int
 
 	if err != nil {
 		switch {
-		case isDuplicateKeyError(err):
+		case IsDuplicateKeyError(err):
 			return ErrConflict
 		default:
 			return err
@@ -70,7 +70,7 @@ func (s *FollowerStore) UnFollow(ctx context.Context, followerID int64, userID i
 }
 
 // Helper function to check for duplicate key errors
-func isDuplicateKeyError(err error) bool {
+func IsDuplicateKeyError(err error) bool {
 	if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 		return true
 	}

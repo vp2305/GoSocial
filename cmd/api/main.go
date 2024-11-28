@@ -4,6 +4,7 @@ import (
 	"SocialMedia/internal/db"
 	"SocialMedia/internal/env"
 	"SocialMedia/internal/store"
+	"time"
 
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
@@ -38,6 +39,10 @@ func main() {
 		logger.Fatal("Error loading .env file")
 	}
 
+	mailExp, err := time.ParseDuration(env.GetString("MAIL_EXP", "72h")) // Default to 3 days
+	if err != nil {
+		logger.Fatal("Invalid MAIL_EXP value")
+	}
 	cfg := config{
 		addr:   env.GetString("ADDR", ":8080"),
 		apiURL: env.GetString("EXTERNAL_URL", "localhost:8080"),
@@ -48,6 +53,9 @@ func main() {
 			maxIdleTime:  env.GetString("DB_MAX_IDLE_TIME", "15m"),
 		},
 		env: env.GetString("ENV", "development"),
+		mail: mailConfig{
+			exp: mailExp,
+		},
 	}
 
 	// Database

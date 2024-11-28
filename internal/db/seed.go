@@ -4,6 +4,7 @@ import (
 	"SocialMedia/internal/models"
 	"SocialMedia/internal/store"
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -61,13 +62,15 @@ var comments = []string{
 	"Thanks for the information, very useful.",
 }
 
-func Seed(store store.Storage) {
+func Seed(store store.Storage, db *sql.DB) {
 	ctx := context.Background()
 
 	users := generateUsers(100)
+	tx, _ := db.BeginTx(ctx, nil)
 
 	for _, user := range users {
-		if err := store.Users.Create(ctx, user); err != nil {
+		if err := store.Users.Create(ctx, tx, user); err != nil {
+			_ = tx.Rollback()
 			log.Println("Error creating user: ", err)
 			return
 		}
@@ -99,7 +102,9 @@ func generateUsers(num int) []*models.User {
 		users[i] = &models.User{
 			Username: usernames[i%len(usernames)] + fmt.Sprintf("%d", i),
 			Email:    usernames[i%len(usernames)] + fmt.Sprintf("%d", i) + "@example.com",
-			Password: "123123",
+		}
+		if err := users[i].Password.Set("12345"); err != nil {
+			log.Fatal("Error hashing a password")
 		}
 	}
 

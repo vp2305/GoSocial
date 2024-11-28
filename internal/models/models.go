@@ -1,5 +1,7 @@
 package models
 
+import "golang.org/x/crypto/bcrypt"
+
 type Post struct {
 	ID        int64     `json:"id"`
 	UserID    int64     `json:"user_id"`
@@ -18,15 +20,6 @@ type PostWithMetadata struct {
 	CommentCount int `json:"comments_count"`
 }
 
-// Not returning the password in the json responses
-type User struct {
-	ID        int64  `json:"id"`
-	Username  string `json:"username"`
-	Email     string `json:"email"`
-	Password  string `json:"-"`
-	CreatedAt string `json:"created_at"`
-}
-
 type Comment struct {
 	ID        int64  `json:"id"`
 	PostID    int64  `json:"post_id"`
@@ -40,4 +33,32 @@ type Follower struct {
 	UserID     int64  `json:"user_id"`
 	FollowerID int64  `json:"follower_id"`
 	CreatedAt  string `json:"created_at"`
+}
+
+// Not returning the password in the json responses
+type User struct {
+	ID        int64    `json:"id"`
+	Username  string   `json:"username"`
+	Email     string   `json:"email"`
+	Password  password `json:"-"`
+	CreatedAt string   `json:"created_at"`
+}
+
+type password struct {
+	text *string
+	hash []byte
+}
+
+// Helper function
+func (p *password) Set(text string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(text), bcrypt.DefaultCost)
+
+	if err != nil {
+		return err
+	}
+
+	p.text = &text
+	p.hash = hash
+
+	return nil
 }

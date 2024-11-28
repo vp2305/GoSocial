@@ -23,7 +23,7 @@ func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request,
 }
 
 func (app *application) conflictResponse(w http.ResponseWriter, r *http.Request, err error) {
-	app.logger.Errorf("conflict error", "method", r.Method, "path", r.URL.Path, "error", err.Error())
+	app.logger.Errorw("conflict error", "method", r.Method, "path", r.URL.Path, "error", err.Error())
 
 	writeJSONError(w, http.StatusConflict, err.Error())
 }
