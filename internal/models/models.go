@@ -41,12 +41,13 @@ type User struct {
 	Username  string   `json:"username"`
 	Email     string   `json:"email"`
 	Password  password `json:"-"`
+	IsActive  bool     `json:"is_active"`
 	CreatedAt string   `json:"created_at"`
 }
 
 type password struct {
-	text *string
-	hash []byte
+	Text *string
+	Hash []byte
 }
 
 // Helper function
@@ -57,8 +58,8 @@ func (p *password) Set(text string) error {
 		return err
 	}
 
-	p.text = &text
-	p.hash = hash
+	p.Text = &text
+	p.Hash = hash
 
 	return nil
 }
