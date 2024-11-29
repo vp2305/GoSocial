@@ -133,7 +133,7 @@ func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Reque
 //	@Produce		json
 //	@Param			token	path		string	true	"Invitation token"
 //	@Success		204		{string}	string	"User activated"
-//	@Failure		404		{object}	error "No users found associated to the token provided"
+//	@Failure		404		{object}	error	"No users found associated to the token provided"
 //	@Failure		500		{object}	error
 //	@Security		ApiKeyAuth
 //	@Router			/users/activate/{token} [put]

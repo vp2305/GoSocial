@@ -84,7 +84,7 @@ func (s *UserStore) GetByID(ctx context.Context, userID int64) (*models.User, er
 		&user.ID,
 		&user.Username,
 		&user.Email,
-		&user.Password,
+		&user.Password.Hash,
 		&user.CreatedAt,
 	)
 
@@ -122,6 +122,34 @@ func (s *UserStore) Activate(ctx context.Context, token string) error {
 
 		return nil
 	})
+}
+
+func (s *UserStore) Delete(ctx context.Context, userID int64) error {
+	query := `
+		DELETE FROM users
+		WHERE id = $1
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	_, err := s.db.ExecContext(
+		ctx,
+		query,
+		userID,
+	)
+
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			return ErrNotFound
+		default:
+			return err
+		}
+
+	}
+
+	return nil
 }
 
 func (s *UserStore) getUserFromInvitations(ctx context.Context, tx *sql.Tx, token string) (*models.User, error) {
