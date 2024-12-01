@@ -57,6 +57,7 @@
   - `go install github.com/swaggo/swag/cmd/swag@latest`
   - `go get -u github.com/swaggo/http-swagger`
 - zap: To handle structured logging in the application
+- go-chi/cors: To handle the cors in the application
 
 ### Not included 3rd party libraries but worth mentioning
 - GORM - Simplify the database interactions
