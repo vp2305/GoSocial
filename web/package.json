@@ -10,6 +10,7 @@
     "@types/node": "^16.18.121",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "nth-check": "^2.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -41,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "postcss": "^8.4.49",
     "react-router-dom": "^7.0.1"
   }
 }
