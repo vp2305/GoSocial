@@ -16,6 +16,19 @@ definitions:
     - content
     - title
     type: object
+  main.CreateUserTokenPayload:
+    properties:
+      email:
+        maxLength: 255
+        type: string
+      password:
+        maxLength: 72
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    type: object
   main.RegisterUserPayload:
     properties:
       email:
@@ -142,6 +155,37 @@ info:
   termsOfService: http://swagger.io/terms/
   title: "GoSocialMedia\tAPI"
 paths:
+  /authentication/token:
+    post:
+      consumes:
+      - application/json
+      description: Create a token for stateless authorization
+      parameters:
+      - description: User credentials
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateUserTokenPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token
+          schema:
+            type: string
+        "400":
+          description: Invalid payload
+          schema: {}
+        "401":
+          description: User not found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Create a token
+      tags:
+      - authentication
   /authentication/user:
     post:
       consumes:

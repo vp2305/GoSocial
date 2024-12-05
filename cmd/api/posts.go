@@ -51,7 +51,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	userId := 1
+	userId := 131
 	post := &models.Post{
 		Title:   payload.Title,
 		Content: payload.Content,

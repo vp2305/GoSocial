@@ -1,6 +1,8 @@
 package models
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 type Post struct {
 	ID        int64     `json:"id"`
@@ -62,4 +64,8 @@ func (p *password) Set(text string) error {
 	p.Hash = hash
 
 	return nil
+}
+
+func (p *password) Compare(payload string) error {
+	return bcrypt.CompareHashAndPassword(p.Hash, []byte(payload))
 }
