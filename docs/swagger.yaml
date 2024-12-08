@@ -389,14 +389,6 @@ paths:
         name: userID
         required: true
         type: integer
-      - description: Request body with current user ID in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          additionalProperties:
-            type: integer
-          type: object
       produces:
       - application/json
       responses:
@@ -430,14 +422,6 @@ paths:
         name: userID
         required: true
         type: integer
-      - description: Request body with current user ID in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          additionalProperties:
-            type: integer
-          type: object
       produces:
       - application/json
       responses:

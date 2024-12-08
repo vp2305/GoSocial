@@ -3,8 +3,6 @@ package main
 import (
 	"SocialMedia/internal/models"
 	"SocialMedia/internal/store"
-	"context"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -36,10 +34,6 @@ func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type FollowUser struct {
-	UserID int64 `json:"user_id"`
-}
-
 // FollowUser godoc
 //
 //	@Summary		Follow a user
@@ -47,27 +41,25 @@ type FollowUser struct {
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			userID	path		int				true	"Target User ID"
-//	@Param			body	body		map[string]int	true	"Request body with current user ID in JSON format"
-//	@Success		204		{string}	string			"User followed successfully"
-//	@Failure		409		{object}	error			"Already following the user"
-//	@Failure		404		{object}	error			"Target user not found"
-//	@Failure		400		{object}	error			"Invalid request"
+//	@Param			userID	path		int		true	"Target User ID"
+//	@Success		204		{string}	string	"User followed successfully"
+//	@Failure		409		{object}	error	"Already following the user"
+//	@Failure		404		{object}	error	"Target user not found"
+//	@Failure		400		{object}	error	"Invalid request"
 //	@Security		ApiKeyAuth
 //	@Router			/users/{userID}/follow [put]
 func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request) {
-	followerUser := getUserFromCtx(r)
+	user := getUserFromCtx(r)
+	followedID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
 
-	// TODO: Revert back to auth userID from ctx
-	var payload FollowUser
-	if err := readJSON(w, r, &payload); err != nil {
+	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
-	err := app.store.Followers.Follow(r.Context(), followerUser.ID, payload.UserID)
+	ctx := r.Context()
 
-	if err != nil {
+	if err := app.store.Followers.Follow(ctx, user.ID, followedID); err != nil {
 		switch err {
 		case store.ErrConflict:
 			app.conflictResponse(w, r, err)
@@ -90,26 +82,22 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			userID	path		int				true	"Target User ID"
-//	@Param			body	body		map[string]int	true	"Request body with current user ID in JSON format"
-//	@Success		204		{string}	string			"User unfollowed successfully"
-//	@Failure		404		{object}	error			"Target user not found"
-//	@Failure		400		{object}	error			"Invalid request"
+//	@Param			userID	path		int		true	"Target User ID"
+//	@Success		204		{string}	string	"User unfollowed successfully"
+//	@Failure		404		{object}	error	"Target user not found"
+//	@Failure		400		{object}	error	"Invalid request"
 //	@Security		ApiKeyAuth
 //	@Router			/users/{userID}/unfollow [put]
 func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Request) {
-	unfollowedUser := getUserFromCtx(r)
+	user := getUserFromCtx(r)
+	unfollowedID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
 
-	// TODO: Revert back to auth userID from ctx
-	var payload FollowUser
-	if err := readJSON(w, r, &payload); err != nil {
+	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
-	err := app.store.Followers.UnFollow(r.Context(), unfollowedUser.ID, payload.UserID)
-
-	if err != nil {
+	if err := app.store.Followers.UnFollow(r.Context(), user.ID, unfollowedID); err != nil {
 		switch err {
 		case store.ErrNotFound:
 			app.notFoundResponse(w, r, err)
@@ -154,35 +142,6 @@ func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Reque
 		app.internalServerError(w, r, err)
 		return
 	}
-}
-
-func (app *application) usersContextMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		idParam := chi.URLParam(r, "userID")
-		userID, err := strconv.ParseInt(idParam, 10, 64)
-
-		if err != nil {
-			app.internalServerError(w, r, err)
-			return
-		}
-
-		ctx := r.Context()
-
-		user, err := app.store.Users.GetByID(ctx, userID)
-
-		if err != nil {
-			switch {
-			case errors.Is(err, store.ErrNotFound):
-				app.notFoundResponse(w, r, store.ErrNotFound)
-			default:
-				app.internalServerError(w, r, err)
-			}
-			return
-		}
-
-		ctx = context.WithValue(ctx, userCtx, user)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
 }
 
 func getUserFromCtx(r *http.Request) *models.User {

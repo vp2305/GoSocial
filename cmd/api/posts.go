@@ -51,12 +51,13 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	userId := 131
+	user := getUserFromCtx(r)
+
 	post := &models.Post{
 		Title:   payload.Title,
 		Content: payload.Content,
 		Tags:    payload.Tags,
-		UserID:  int64(userId), // TODO: Change after auth
+		UserID:  user.ID,
 	}
 
 	ctx := r.Context()
