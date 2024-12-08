@@ -54,7 +54,9 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	user := &models.User{
 		Username: payload.Username,
 		Email:    payload.Email,
-		RoleID:   1, // TODO: Change this to be taken in or default to 1
+		Role: models.Role{
+			Name: "user",
+		},
 	}
 
 	if err := user.Password.Set(payload.Password); err != nil {
@@ -107,7 +109,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	app.logger.Infow("email sent", "status code", status)
+	app.logger.Infow("user creation info", "email status code", status, "token", plainToken)
 
 	if err := app.jsonResponse(w, http.StatusCreated, user); err != nil {
 		app.internalServerError(w, r, err)
