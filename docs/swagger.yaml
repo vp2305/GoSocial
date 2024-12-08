@@ -130,6 +130,17 @@ definitions:
       version:
         type: integer
     type: object
+  models.Role:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      level:
+        type: integer
+      name:
+        type: string
+    type: object
   models.User:
     properties:
       created_at:
@@ -140,6 +151,10 @@ definitions:
         type: integer
       is_active:
         type: boolean
+      role:
+        $ref: '#/definitions/models.Role'
+      role_id:
+        type: integer
       username:
         type: string
     type: object
@@ -351,17 +366,11 @@ paths:
       summary: Update a post
       tags:
       - posts
-  /users/{id}:
+  /users:
     get:
       consumes:
       - application/json
       description: Fetches a user profile by ID
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:

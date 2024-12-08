@@ -54,6 +54,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	user := &models.User{
 		Username: payload.Username,
 		Email:    payload.Email,
+		RoleID:   1, // TODO: Change this to be taken in or default to 1
 	}
 
 	if err := user.Password.Set(payload.Password); err != nil {

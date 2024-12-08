@@ -102,6 +102,7 @@ func generateUsers(num int) []*models.User {
 		users[i] = &models.User{
 			Username: usernames[i%len(usernames)] + fmt.Sprintf("%d", i),
 			Email:    usernames[i%len(usernames)] + fmt.Sprintf("%d", i) + "@example.com",
+			RoleID:   1,
 		}
 		if err := users[i].Password.Set("12345"); err != nil {
 			log.Fatal("Error hashing a password")

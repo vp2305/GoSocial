@@ -112,8 +112,8 @@ func (app *application) mount() http.Handler {
 				r.Use(app.postsContextMiddleware) // Injecting a middleware here to make fetching for the post easier.
 
 				r.Get("/", app.getPostHandler)
-				r.Delete("/", app.deletePostHandler)
-				r.Patch("/", app.patchPostHandler)
+				r.Delete("/", app.checkPostOwnership("moderator", app.deletePostHandler))
+				r.Patch("/", app.checkPostOwnership("admin", app.patchPostHandler))
 			})
 		})
 
@@ -123,14 +123,14 @@ func (app *application) mount() http.Handler {
 			r.Route("/{userID}", func(r chi.Router) {
 				r.Use(app.AuthTokenMiddleware())
 
-				r.Get("/", app.getUserHandler)
-
 				r.Put("/follow", app.followUserHandler)
 				r.Put("/unfollow", app.unfollowUserHandler)
 			})
 
 			r.Group(func(r chi.Router) {
 				r.Use(app.AuthTokenMiddleware())
+
+				r.Get("/", app.getUserHandler)
 				r.Get("/feed", app.getUserFeedHandler)
 			})
 		})

@@ -20,11 +20,10 @@ const userCtx userKey = "users"
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		int	true	"User ID"
 //	@Success		200	{object}	models.User
 //	@Failure		404	{object}	error	"Invalid request"
 //	@Security		ApiKeyAuth
-//	@Router			/users/{id} [get]
+//	@Router			/users [get]
 func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromCtx(r)
 
