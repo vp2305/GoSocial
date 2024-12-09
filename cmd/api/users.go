@@ -15,17 +15,56 @@ const userCtx userKey = "users"
 
 // Getuser godoc
 //
-//	@Summary		Fetches a user profile
-//	@Description	Fetches a user profile by ID
-//	@Tags			users
+//	@Summary		User profile
+//	@Description	Fetches profile of the current user
+//	@Tags			user
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	models.User
 //	@Failure		404	{object}	error	"Invalid request"
 //	@Security		ApiKeyAuth
-//	@Router			/users [get]
-func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
+//	@Router			/user [get]
+func (app *application) getUserProfile(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromCtx(r)
+
+	if err := app.jsonResponse(w, http.StatusOK, user); err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+}
+
+// GetUserById godoc
+//
+//	@Summary		Profile by ID
+//	@Description	Fetches user profile by given ID
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			userID	path		int	true	"Target User ID"
+//	@Success		200		{object}	models.User
+//	@Failure		404		{object}	error	"Invalid request"
+//	@Failure		400		{object}	error	"Malformed param"
+//	@Security		ApiKeyAuth
+//	@Router			/user/{userID} [get]
+func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
+	userId, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
+
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	user, err := app.store.Users.GetByID(r.Context(), userId)
+
+	if err != nil {
+		switch err {
+		case store.ErrNotFound:
+			app.notFoundResponse(w, r, err)
+		default:
+			app.internalServerError(w, r, err)
+		}
+		return
+	}
 
 	if err := app.jsonResponse(w, http.StatusOK, user); err != nil {
 		app.internalServerError(w, r, err)
@@ -37,7 +76,7 @@ func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Follow a user
 //	@Description	Follow a user by providing the target user's ID in the path and the current user's ID in the request body.
-//	@Tags			users
+//	@Tags			user
 //	@Accept			json
 //	@Produce		json
 //	@Param			userID	path		int		true	"Target User ID"
@@ -46,7 +85,7 @@ func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 //	@Failure		404		{object}	error	"Target user not found"
 //	@Failure		400		{object}	error	"Invalid request"
 //	@Security		ApiKeyAuth
-//	@Router			/users/{userID}/follow [put]
+//	@Router			/user/{userID}/follow [put]
 func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromCtx(r)
 	followedID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
@@ -78,7 +117,7 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 //
 //	@Summary		Unfollow a user
 //	@Description	Unfollow a user by providing the target user's ID in the path and the current user's ID in the request body.
-//	@Tags			users
+//	@Tags			user
 //	@Accept			json
 //	@Produce		json
 //	@Param			userID	path		int		true	"Target User ID"
@@ -86,7 +125,7 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 //	@Failure		404		{object}	error	"Target user not found"
 //	@Failure		400		{object}	error	"Invalid request"
 //	@Security		ApiKeyAuth
-//	@Router			/users/{userID}/unfollow [put]
+//	@Router			/user/{userID}/unfollow [put]
 func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromCtx(r)
 	unfollowedID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
@@ -123,7 +162,7 @@ func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Reque
 //	@Failure		404		{object}	error	"No users found associated to the token provided"
 //	@Failure		500		{object}	error
 //	@Security		ApiKeyAuth
-//	@Router			/users/activate/{token} [put]
+//	@Router			/user/activate/{token} [put]
 func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Request) {
 	token := chi.URLParam(r, "token")
 

@@ -326,14 +326,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/user": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Fetches a user profile by ID",
+                "description": "Fetches profile of the current user",
                 "consumes": [
                     "application/json"
                 ],
@@ -341,9 +341,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "user"
                 ],
-                "summary": "Fetches a user profile",
+                "summary": "User profile",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -358,7 +358,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/activate/{token}": {
+        "/user/activate/{token}": {
             "put": {
                 "security": [
                     {
@@ -400,7 +400,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/feed": {
+        "/user/feed": {
             "get": {
                 "security": [
                     {
@@ -467,7 +467,52 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{userID}/follow": {
+        "/user/{userID}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fetches user profile by given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Profile by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Target User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed param",
+                        "schema": {}
+                    },
+                    "404": {
+                        "description": "Invalid request",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/user/{userID}/follow": {
             "put": {
                 "security": [
                     {
@@ -482,7 +527,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "user"
                 ],
                 "summary": "Follow a user",
                 "parameters": [
@@ -516,7 +561,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{userID}/unfollow": {
+        "/user/{userID}/unfollow": {
             "put": {
                 "security": [
                     {
@@ -531,7 +576,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "user"
                 ],
                 "summary": "Unfollow a user",
                 "parameters": [

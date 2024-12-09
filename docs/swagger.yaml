@@ -366,11 +366,11 @@ paths:
       summary: Update a post
       tags:
       - posts
-  /users:
+  /user:
     get:
       consumes:
       - application/json
-      description: Fetches a user profile by ID
+      description: Fetches profile of the current user
       produces:
       - application/json
       responses:
@@ -383,10 +383,39 @@ paths:
           schema: {}
       security:
       - ApiKeyAuth: []
-      summary: Fetches a user profile
+      summary: User profile
       tags:
-      - users
-  /users/{userID}/follow:
+      - user
+  /user/{userID}:
+    get:
+      consumes:
+      - application/json
+      description: Fetches user profile by given ID
+      parameters:
+      - description: Target User ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Malformed param
+          schema: {}
+        "404":
+          description: Invalid request
+          schema: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Profile by ID
+      tags:
+      - user
+  /user/{userID}/follow:
     put:
       consumes:
       - application/json
@@ -418,8 +447,8 @@ paths:
       - ApiKeyAuth: []
       summary: Follow a user
       tags:
-      - users
-  /users/{userID}/unfollow:
+      - user
+  /user/{userID}/unfollow:
     put:
       consumes:
       - application/json
@@ -448,8 +477,8 @@ paths:
       - ApiKeyAuth: []
       summary: Unfollow a user
       tags:
-      - users
-  /users/activate/{token}:
+      - user
+  /user/activate/{token}:
     put:
       description: Activates/Register a user by invitation token
       parameters:
@@ -476,7 +505,7 @@ paths:
       summary: Activates/Register a user
       tags:
       - authentication
-  /users/feed:
+  /user/feed:
     get:
       consumes:
       - application/json

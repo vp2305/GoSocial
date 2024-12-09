@@ -20,7 +20,7 @@ import (
 //	@Success		200		{object}	[]models.PostWithMetadata
 //	@Failure		404		{object}	error	"Post not found"
 //	@Security		ApiKeyAuth
-//	@Router			/users/feed [get]
+//	@Router			/user/feed [get]
 func (app *application) getUserFeedHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromCtx(r)
 
