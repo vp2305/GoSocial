@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "API for a social network for gophers.",
-        "title": "GoSocialMedia\tAPI",
+        "title": "GoSocial\tAPI",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",

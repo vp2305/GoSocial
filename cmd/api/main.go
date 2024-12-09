@@ -14,7 +14,7 @@ import (
 
 const version = "0.0.1"
 
-//	@title			GoSocialMedia	API
+//	@title			GoSocial	API
 //	@description	API for a social network for gophers.
 //	@termsOfService	http://swagger.io/terms/
 
@@ -71,7 +71,7 @@ func main() {
 			token: tokenConfig{
 				secret: env.GetString("AUTH_TOKEN_SECRET", "example"),
 				exp:    time.Hour * 24 * 3, // 3 days
-				iss:    env.GetString("AUTH_TOKEN_ISSUER", "gosocialmedia"),
+				iss:    env.GetString("AUTH_TOKEN_ISSUER", "gosocial"),
 			},
 		},
 	}

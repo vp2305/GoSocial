@@ -12,7 +12,7 @@ function App() {
           path="/"
           element={
             <div className="App-header">
-              <h1>Welcome to GoSocialMedia!</h1>
+              <h1>Welcome to GoSocial!</h1>
             </div>
           }
         />

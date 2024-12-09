@@ -31,7 +31,7 @@ function ConfirmPage() {
       <h1 className=" text-5xl ">Confirm your email</h1>
       <p className="text-xl">
         Once you confirm your email, you will be able to log in to your account
-        and start using GoSocialMedia.
+        and start using GoSocial.
       </p>
 
       <button

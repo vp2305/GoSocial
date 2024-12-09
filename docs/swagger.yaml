@@ -168,7 +168,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: "GoSocialMedia\tAPI"
+  title: "GoSocial\tAPI"
 paths:
   /authentication/token:
     post:
