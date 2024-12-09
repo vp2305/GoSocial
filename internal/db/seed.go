@@ -76,10 +76,12 @@ func Seed(store store.Storage, db *sql.DB) {
 		}
 	}
 
+	tx.Commit()
+
 	posts := generatePosts(200, users)
 	for _, post := range posts {
 		if err := store.Posts.Create(ctx, post); err != nil {
-			log.Println("Error creating user: ", err)
+			log.Println("Error creating posts: ", err)
 			return
 		}
 	}
@@ -87,7 +89,7 @@ func Seed(store store.Storage, db *sql.DB) {
 	comments := generateComments(500, users, posts)
 	for _, comment := range comments {
 		if err := store.Comments.Create(ctx, comment); err != nil {
-			log.Println("Error creating user: ", err)
+			log.Println("Error creating comments: ", err)
 			return
 		}
 	}
