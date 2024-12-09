@@ -82,7 +82,6 @@ func (app *application) AuthTokenMiddleware() func(http.Handler) http.Handler {
 			claims, _ := jwtToken.Claims.(jwt.MapClaims)
 
 			userID, err := strconv.ParseInt(fmt.Sprintf("%.f", claims["sub"]), 10, 64)
-
 			if err != nil {
 				app.unauthorizedErrorResponse(w, r, err)
 				return
@@ -90,8 +89,7 @@ func (app *application) AuthTokenMiddleware() func(http.Handler) http.Handler {
 
 			ctx := r.Context()
 
-			user, err := app.store.Users.GetByID(ctx, userID)
-
+			user, err := app.getUser(ctx, userID)
 			if err != nil {
 				app.unauthorizedErrorResponse(w, r, err)
 				return
@@ -136,4 +134,28 @@ func (app *application) checkRolePrecedence(ctx context.Context, user *models.Us
 	}
 
 	return user.Role.Level >= role.Level, nil
+}
+
+func (app *application) getUser(ctx context.Context, userID int64) (*models.User, error) {
+	if !app.config.redisCfg.enabled {
+		return app.store.Users.GetByID(ctx, userID)
+	}
+
+	user, err := app.cacheStorage.User.Get(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		user, err = app.store.Users.GetByID(ctx, userID)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := app.cacheStorage.User.Set(ctx, user); err != nil {
+			return nil, err
+		}
+	}
+
+	return user, nil
 }

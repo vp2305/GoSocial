@@ -20,7 +20,7 @@ func (s *UserStore) Create(ctx context.Context, tx *sql.Tx, user *models.User) e
 	query := `
 		INSERT INTO users (username, password, email, role_id)
 		VALUES ($1, $2, $3, ( SELECT id FROM roles where name = $4 )) 
-		RETURNING id, created_at
+		RETURNING id, created_at, is_active
 	`
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
@@ -41,6 +41,7 @@ func (s *UserStore) Create(ctx context.Context, tx *sql.Tx, user *models.User) e
 	).Scan(
 		&user.ID,
 		&user.CreatedAt,
+		&user.IsActive,
 	)
 
 	if err != nil {

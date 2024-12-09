@@ -47,15 +47,16 @@ func (app *application) getUserProfile(w http.ResponseWriter, r *http.Request) {
 //	@Security		ApiKeyAuth
 //	@Router			/user/{userID} [get]
 func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
-	userId, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
+	userID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
 
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
-	user, err := app.store.Users.GetByID(r.Context(), userId)
+	ctx := r.Context()
 
+	user, err := app.getUser(ctx, userID)
 	if err != nil {
 		switch err {
 		case store.ErrNotFound:
