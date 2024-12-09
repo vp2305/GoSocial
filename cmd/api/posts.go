@@ -169,9 +169,9 @@ func (app *application) patchPostHandler(w http.ResponseWriter, r *http.Request)
 		post.Tags = *payload.Tags
 	}
 
-	if err := app.store.Posts.PatchPostById(r.Context(), post); err != nil {
-		switch {
-		case errors.Is(err, store.ErrConflict):
+	if err := app.updatePost(r.Context(), post); err != nil {
+		switch err {
+		case store.ErrConflict:
 			app.conflictResponse(w, r, err)
 		default:
 			app.internalServerError(w, r, err)
@@ -217,4 +217,13 @@ func getPostFromCtx(r *http.Request) *models.Post {
 	post, _ := r.Context().Value(postCtx).(*models.Post)
 
 	return post
+}
+
+func (app *application) updatePost(ctx context.Context, post *models.Post) error {
+	if err := app.store.Posts.PatchPost(ctx, post); err != nil {
+		return err
+	}
+
+	app.cacheStorage.User.Delete(ctx, post.UserID)
+	return nil
 }

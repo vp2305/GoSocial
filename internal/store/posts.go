@@ -112,7 +112,7 @@ func (s *PostStore) DeleteByID(ctx context.Context, postID int64) error {
 	return nil
 }
 
-func (s *PostStore) PatchPostById(ctx context.Context, post *models.Post) error {
+func (s *PostStore) PatchPost(ctx context.Context, post *models.Post) error {
 	query := `
 		UPDATE posts
 		SET title = $2, content = $3, tags = $4, updated_at = NOW(), version = version + 1
@@ -154,7 +154,7 @@ func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedF
 
 	query := `
 		SELECT 
-			p.id, p.user_id, u.username, p.title, p.content, p.tags, COUNT(c.id) AS comments_count, p.created_at, p.version
+			p.id, p.user_id, u.username, u.email, p.title, p.content, p.tags, COUNT(c.id) AS comments_count, p.created_at, p.version
 		FROM posts p
 		LEFT JOIN comments c on c.post_id = p.id
 		LEFT JOIN users u on p.user_id = u.id
@@ -172,7 +172,7 @@ func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedF
 
 	// Add ordering, limit, and offset
 	query += `
-		GROUP BY p.id, u.username
+		GROUP BY p.id, u.username, u.email
 		ORDER BY p.created_at ` + fq.Sort + `
 		LIMIT $2 OFFSET $3
 	`
@@ -211,6 +211,7 @@ func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedF
 			&p.ID,
 			&p.UserID,
 			&p.User.Username,
+			&p.User.Email,
 			&p.Title,
 			&p.Content,
 			pq.Array(&p.Tags),
