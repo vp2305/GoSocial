@@ -475,7 +475,7 @@ paths:
       - ApiKeyAuth: []
       summary: Activates/Register a user
       tags:
-      - users
+      - authentication
   /users/feed:
     get:
       consumes:

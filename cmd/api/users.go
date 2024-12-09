@@ -116,7 +116,7 @@ func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Reque
 //
 //	@Summary		Activates/Register a user
 //	@Description	Activates/Register a user by invitation token
-//	@Tags			users
+//	@Tags			authentication
 //	@Produce		json
 //	@Param			token	path		string	true	"Invitation token"
 //	@Success		204		{string}	string	"User activated"
