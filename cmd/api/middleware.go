@@ -141,7 +141,7 @@ func (app *application) getUser(ctx context.Context, userID int64) (*models.User
 		return app.store.Users.GetByID(ctx, userID)
 	}
 
-	user, err := app.cacheStorage.User.Get(ctx, userID)
+	user, err := app.cacheStorage.Users.Get(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (app *application) getUser(ctx context.Context, userID int64) (*models.User
 			return nil, err
 		}
 
-		if err := app.cacheStorage.User.Set(ctx, user); err != nil {
+		if err := app.cacheStorage.Users.Set(ctx, user); err != nil {
 			return nil, err
 		}
 	}

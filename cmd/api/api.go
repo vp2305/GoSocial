@@ -3,6 +3,7 @@ package main
 import (
 	"SocialMedia/internal/auth"
 	"SocialMedia/internal/mailer"
+	"SocialMedia/internal/ratelimiter"
 	"SocialMedia/internal/store"
 	"SocialMedia/internal/store/cache"
 	"fmt"
@@ -26,6 +27,7 @@ type application struct {
 	logger        *zap.SugaredLogger
 	mailer        mailer.Client
 	authenticator auth.Authenticator
+	rateLimiter   ratelimiter.Limiter
 }
 
 type config struct {
@@ -37,6 +39,7 @@ type config struct {
 	frontendURL string
 	auth        authConfig
 	redisCfg    redisConfig
+	rateLimiter ratelimiter.Config
 }
 
 type redisConfig struct {

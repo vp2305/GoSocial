@@ -2,6 +2,7 @@ package main
 
 import (
 	"SocialMedia/internal/auth"
+	"SocialMedia/internal/ratelimiter"
 	"SocialMedia/internal/store"
 	"SocialMedia/internal/store/cache"
 	"net/http"
@@ -11,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func newTestApplication(t *testing.T) *application {
+func newTestApplication(t *testing.T, cfg config) *application {
 	t.Helper()
 
 	logger := zap.NewNop().Sugar()
@@ -22,11 +23,19 @@ func newTestApplication(t *testing.T) *application {
 
 	testAuth := &auth.TestAuthenticator{}
 
+	// Rate limiter
+	rateLimiter := ratelimiter.NewFixedWindowLimiter(
+		cfg.rateLimiter.RequestsPerTimeFrame,
+		cfg.rateLimiter.TimeFrame,
+	)
+
 	return &application{
 		logger:        logger,
 		store:         mockStore,
 		cacheStorage:  mockCacheStore,
 		authenticator: testAuth,
+		config:        cfg,
+		rateLimiter:   rateLimiter,
 	}
 }
 
@@ -37,8 +46,8 @@ func executeRequest(req *http.Request, mux http.Handler) *httptest.ResponseRecor
 	return rr
 }
 
-func checkResponseCode(t *testing.T, excepted, actual int) {
-	if excepted != actual {
-		t.Errorf("Expected response code %d. Got %d instead", excepted, actual)
+func checkResponseCode(t *testing.T, expected, actual int) {
+	if expected != actual {
+		t.Errorf("Expected response code %d. Got %d", expected, actual)
 	}
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Storage struct {
-	User interface {
+	Users interface {
 		Get(context.Context, int64) (*models.User, error)
 		Set(context.Context, *models.User) error
 		Delete(context.Context, int64)
@@ -17,6 +17,6 @@ type Storage struct {
 
 func NewRedisStorage(rbd *redis.Client) Storage {
 	return Storage{
-		User: &UserStore{rdb: rbd},
+		Users: &UserStore{rdb: rbd},
 	}
 }

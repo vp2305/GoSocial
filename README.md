@@ -59,6 +59,7 @@
 - zap: To handle structured logging in the application
 - go-chi/cors: To handle the cors in the application
 - redis v8 - Handle in memory caching to improve performance of the api endpoints
+- testify - To handle testing via 3rd party library
 
 ### Not included 3rd party libraries but worth mentioning
 - GORM - Simplify the database interactions

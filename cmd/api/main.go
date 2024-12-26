@@ -5,6 +5,7 @@ import (
 	"SocialMedia/internal/db"
 	"SocialMedia/internal/env"
 	"SocialMedia/internal/mailer"
+	"SocialMedia/internal/ratelimiter"
 	"SocialMedia/internal/store"
 	"SocialMedia/internal/store/cache"
 	"time"
@@ -81,6 +82,11 @@ func main() {
 			pw:      env.GetString("REDIS_PW", ""),
 			db:      env.GetInt("REDIS_DB", 0),
 			enabled: env.GetBool("REDIS_ENABLED", true),
+		},
+		rateLimiter: ratelimiter.Config{
+			RequestsPerTimeFrame: env.GetInt("RATELIMITER_REQUESTS_COUNT", 20),
+			TimeFrame:            time.Second * 5,
+			Enabled:              env.GetBool("RATE_LIMITER_ENABLED", true),
 		},
 	}
 
