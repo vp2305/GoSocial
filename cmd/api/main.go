@@ -108,7 +108,7 @@ func main() {
 	var rdb *redis.Client
 	if cfg.redisCfg.enabled {
 		rdb = cache.NewRedisClient(cfg.redisCfg.addr, cfg.redisCfg.pw, cfg.redisCfg.db)
-		logger.Info("redis cache connection established")
+		logger.Infow("redis cache connection established", "port", ":8081", "addr", cfg.redisCfg.addr)
 	}
 
 	store := store.NewStorage(db)
