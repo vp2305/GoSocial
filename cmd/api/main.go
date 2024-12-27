@@ -111,6 +111,12 @@ func main() {
 		logger.Infow("redis cache connection established", "port", ":8081", "addr", cfg.redisCfg.addr)
 	}
 
+	// Rate Limiter
+	ratelimiter := ratelimiter.NewFixedWindowLimiter(
+		cfg.rateLimiter.RequestsPerTimeFrame,
+		cfg.rateLimiter.TimeFrame,
+	)
+
 	store := store.NewStorage(db)
 	cacheStorage := cache.NewRedisStorage(rdb)
 
@@ -129,6 +135,7 @@ func main() {
 		logger:        logger,
 		mailer:        mailer,
 		authenticator: jwtAuthenticator,
+		rateLimiter:   ratelimiter,
 	}
 
 	mux := app.mount()

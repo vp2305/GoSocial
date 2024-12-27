@@ -106,6 +106,7 @@ func (app *application) mount() http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer) // Recover from a panics
+	r.Use(app.RateLimiterMiddleware)
 
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
@@ -115,7 +116,7 @@ func (app *application) mount() http.Handler {
 	r.Route("/v1", func(r chi.Router) {
 		// Pass the middleware for a particular route.
 		r.With(
-			app.BasicAuthMiddleware(),
+		// app.BasicAuthMiddleware(),
 		).Get("/health", app.healthCheckHandler)
 
 		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
