@@ -162,7 +162,6 @@ func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Reque
 //	@Success		204		{string}	string	"User activated"
 //	@Failure		404		{object}	error	"No users found associated to the token provided"
 //	@Failure		500		{object}	error
-//	@Security		ApiKeyAuth
 //	@Router			/user/activate/{token} [put]
 func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Request) {
 	token := chi.URLParam(r, "token")

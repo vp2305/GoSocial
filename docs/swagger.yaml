@@ -500,8 +500,6 @@ paths:
         "500":
           description: Internal Server Error
           schema: {}
-      security:
-      - ApiKeyAuth: []
       summary: Activates/Register a user
       tags:
       - authentication

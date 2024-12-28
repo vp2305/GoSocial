@@ -360,11 +360,6 @@ const docTemplate = `{
         },
         "/user/activate/{token}": {
             "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Activates/Register a user by invitation token",
                 "produces": [
                     "application/json"
