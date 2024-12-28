@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/vp2305/GoSocial/compare/v1.0.0...v1.1.0) (2024-12-28)
+
+
+### Features
+
+* update api version automatically ([8c2d0cd](https://github.com/vp2305/GoSocial/commit/8c2d0cd5f1a2724944c2ec77225cb118fd4e95d4))
+
 ## 1.0.0 (2024-12-28)
 
 
