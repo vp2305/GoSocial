@@ -66,6 +66,7 @@
 - sqlx - Simplify the database interactions
 - sqlboiler - Can be used to generate the models from the database
 - goose - Can be used to handle the migrations
+- expvar - Can be used for getting metrics from the server
 
 ### Further reading
 - Clean Architecture
