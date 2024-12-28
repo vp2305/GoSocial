@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/vp2305/GoSocial/compare/v1.1.0...v1.2.0) (2024-12-28)
+
+
+### Features
+
+* dockerfile ([79b19ed](https://github.com/vp2305/GoSocial/commit/79b19edbe81706546a51bd489c52de7276e8bace))
+
+
+### Bug Fixes
+
+* better logs for redis connection ([322474b](https://github.com/vp2305/GoSocial/commit/322474b9e52f2c80fab8042f8123a763f5b0f117))
+* confirm email and migrate commands ([96ffeab](https://github.com/vp2305/GoSocial/commit/96ffeab82c966005546d5b2fc2738a41a698fd8b))
+* removed unnecessary security from activate token endpoint ([feee604](https://github.com/vp2305/GoSocial/commit/feee6042a6aa24198341f1febe0251997319018c))
+
 ## [1.1.0](https://github.com/vp2305/GoSocial/compare/v1.0.0...v1.1.0) (2024-12-28)
 
 
