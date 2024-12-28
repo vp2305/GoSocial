@@ -8,6 +8,7 @@ import (
 	"SocialMedia/internal/ratelimiter"
 	"SocialMedia/internal/store"
 	"SocialMedia/internal/store/cache"
+	"context"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -109,7 +110,14 @@ func main() {
 	var rdb *redis.Client
 	if cfg.redisCfg.enabled {
 		rdb = cache.NewRedisClient(cfg.redisCfg.addr, cfg.redisCfg.pw, cfg.redisCfg.db)
-		logger.Infow("redis cache connection established", "port", ":8081", "addr", cfg.redisCfg.addr)
+
+		// Test the Redis connection
+		ctx := context.Background()
+		if err := rdb.Ping(ctx).Err(); err != nil {
+			logger.Panicw("failed to connect to Redis", "error", err.Error())
+		} else {
+			logger.Infow("redis cache connection established", "port", ":8081", "addr", cfg.redisCfg.addr)
+		}
 	}
 
 	// Rate Limiter
