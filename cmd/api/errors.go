@@ -1,7 +1,10 @@
 package main
 
 import (
+	"errors"
 	"net/http"
+
+	"github.com/go-redis/redis/v8"
 )
 
 func (app *application) internalServerError(w http.ResponseWriter, r *http.Request, err error) {
@@ -29,7 +32,13 @@ func (app *application) conflictResponse(w http.ResponseWriter, r *http.Request,
 }
 
 func (app *application) unauthorizedErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
-	app.logger.Warnf("unauthorized error", "method", r.Method, "path", r.URL.Path, "error", err.Error())
+	var redisErr *redis.Error
+
+	if errors.As(err, redisErr) {
+		app.logger.Errorw("redis-specific error", "method", r.Method, "path", r.URL.Path, "error", redisErr)
+	} else {
+		app.logger.Warnf("unauthorized error", "method", r.Method, "path", r.URL.Path, "error", err.Error())
+	}
 
 	writeJSONError(w, http.StatusUnauthorized, "unauthorized")
 }
