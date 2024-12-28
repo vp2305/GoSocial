@@ -10,7 +10,7 @@ function ConfirmPage() {
     }
 
     const response = await fetch(
-      `http://localhost:8080/v1/users/activate/${token}`,
+      `http://localhost:8080/v1/user/activate/${token}`,
       {
         method: "PUT",
       }
