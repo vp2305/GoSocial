@@ -78,6 +78,7 @@ func (app *application) AuthTokenMiddleware() func(http.Handler) http.Handler {
 				app.unauthorizedErrorResponse(w, r, err)
 				return
 			}
+			app.logger.Warnw("jwt token issued", "token", jwtToken)
 
 			claims, _ := jwtToken.Claims.(jwt.MapClaims)
 
@@ -86,6 +87,7 @@ func (app *application) AuthTokenMiddleware() func(http.Handler) http.Handler {
 				app.unauthorizedErrorResponse(w, r, err)
 				return
 			}
+			app.logger.Warnw("JWT parse", "userID", userID)
 
 			ctx := r.Context()
 
