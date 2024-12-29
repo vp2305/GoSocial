@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.2](https://github.com/vp2305/GoSocial/compare/v1.3.1...v1.3.2) (2024-12-29)
+
+
+### Bug Fixes
+
+* improved run commands for update version ([eb60e64](https://github.com/vp2305/GoSocial/commit/eb60e64e6202775130fc899917d9170bcbb72107))
+* improved run commands for update version ([19a99fd](https://github.com/vp2305/GoSocial/commit/19a99fd512b212f5718fe7ae9636528b7945186d))
+* improved run commands for update version ([ca01017](https://github.com/vp2305/GoSocial/commit/ca010171e9093c2bdca67986124f258920877e48))
+* PAT to create a pull request with the updated release version ([d480b00](https://github.com/vp2305/GoSocial/commit/d480b00b26f63b0433260a11c6927df6309d18fe))
+
 ## [1.3.1](https://github.com/vp2305/GoSocial/compare/v1.3.0...v1.3.1) (2024-12-29)
 
 
