@@ -25,11 +25,9 @@ jobs:
           sed -i "s/const version = \".*\"/const version = \"${{ steps.get_version.outputs.VERSION }}\"/" cmd/api/main.go
 
       - name: Commit and push if changed
-        env:
-          PAT_TOKEN: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add cmd/api/main.go
           git commit -m "Update version to ${{ steps.get_version.outputs.VERSION }}" || echo "No changes to commit"
-          git push https://x-access-token:${PAT_TOKEN}@github.com/vp2305/GoSocial.git HEAD:main
+          git push
