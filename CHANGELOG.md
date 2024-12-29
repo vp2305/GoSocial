@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/vp2305/GoSocial/compare/v1.2.0...v1.3.0) (2024-12-29)
+
+
+### Features
+
+* github ruleset on main branch ([f33f9fd](https://github.com/vp2305/GoSocial/commit/f33f9fdb72156b8d511d3100badc21edcffa43f9))
+
 ## [1.2.0](https://github.com/vp2305/GoSocial/compare/v1.1.0...v1.2.0) (2024-12-28)
 
 
