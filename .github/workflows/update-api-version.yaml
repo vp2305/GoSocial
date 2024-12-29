@@ -30,6 +30,8 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
+          git checkout main
+          git pull origin main
           git checkout -b update-version || git checkout update-version
           git add cmd/api/main.go
           git commit -m "Update version to ${{ steps.get_version.outputs.VERSION }}" || echo "No changes to commit"
@@ -41,6 +43,7 @@ jobs:
           token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
           commit-message: "Update version to ${{ steps.get_version.outputs.VERSION }}"
           branch: update-version
+          base: main
           title: "Update version to ${{ steps.get_version.outputs.VERSION }}"
           body: |
             This PR updates the version to ${{ steps.get_version.outputs.VERSION }}.
