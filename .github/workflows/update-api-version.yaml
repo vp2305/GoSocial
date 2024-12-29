@@ -28,6 +28,7 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
+          git checkout -b update-version
           git add cmd/api/main.go
           git commit -m "Update version to ${{ steps.get_version.outputs.VERSION }}" || echo "No changes to commit"
           git push
