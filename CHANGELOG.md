@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.1](https://github.com/vp2305/GoSocial/compare/v1.3.0...v1.3.1) (2024-12-29)
+
+
+### Bug Fixes
+
+* create update version branch occording to the ruleset ([2745c4f](https://github.com/vp2305/GoSocial/commit/2745c4f4c1835324dce58a3f2769dabf4c2683dc))
+* create update version branch occording to the ruleset ([7e5f290](https://github.com/vp2305/GoSocial/commit/7e5f290ad570300e6356da1aff8f4c04412af01a))
+* reconfigured rulesets to allow github actions ([7886802](https://github.com/vp2305/GoSocial/commit/78868027fbb0f074647810c5d83cf5abd512e2fa))
+
 ## [1.3.0](https://github.com/vp2305/GoSocial/compare/v1.2.0...v1.3.0) (2024-12-29)
 
 
